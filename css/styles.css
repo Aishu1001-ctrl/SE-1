@@ -1,0 +1,185 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #000;
+    color: white;
+}
+
+.container {
+    margin: auto;
+    padding: 20px;
+    max-width: 400px;
+    background: black;
+    border-radius: 10px;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+    border: none;
+    font-size: 16px;
+}
+
+.google-btn {
+    background-color: yellow;
+}
+
+.hidden {
+    display: none;
+}
+
+
+
+
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: url('images/background.jpg') no-repeat center;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.game-container {
+    text-align: center;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 10px;
+    color: white;
+}
+
+.top-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 15px;
+}
+
+.top-buttons button {
+    padding: 10px;
+    background: white;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+}
+
+.scoreboard {
+    background: yellow;
+    color: black;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.game-area {
+    background: black;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.game-image {
+    width: 100%;
+    max-width: 500px;
+}
+
+.error-message {
+    color: red;
+    margin: 10px 0;
+}
+
+input {
+    padding: 10px;
+    width: 80%;
+    margin-bottom: 10px;
+}
+
+button {
+    padding: 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.timer {
+    font-size: 24px;
+    color: yellow;
+    background: black;
+    display: inline-block;
+    padding: 5px;
+}
+
+
+
+
+
+
+
+
+.hidden {
+    display: none;
+}
+
+#guessCountryGame {
+    background: white;
+    color: black;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+#guessCountryGame img {
+    width: 100px;
+    height: 60px;
+    margin: 10px 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: black;
+    color: white;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-container {
+    margin-top: 50px;
+}
+
+h1 {
+    color: yellow;
+}
+
+.profile-info {
+    display: inline-block;
+    text-align: left;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.profile-info p {
+    margin: 10px 0;
+}

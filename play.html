@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flag Guessing Game</title>
+    <link rel="stylesheet" href="css/play.css">
+    
+    <!-- Firebase SDK imports using modular v9 -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPDA9APsTXZOY1xpzlDZsS6u3hgFK-3OU",
+            authDomain: "se01-6c41d.firebaseapp.com",
+            projectId: "se01-6c41d",
+            storageBucket: "se01-6c41d.firebasestorage.app",
+            messagingSenderId: "838786217773",
+            appId: "1:838786217773:web:30be0a8376d0e87d86c5a4",
+            measurementId: "G-BMZD314T0M"
+            };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // Make Firebase services available globally
+        window.app = app;
+        window.auth = auth;
+        window.db = db;
+    </script>
+</head>
+<body>
+    <div class="game-container">
+        <div class="top-buttons">
+            <button id="exit-btn" class="exit-button">Exit</button>
+            <button id="leaderboard-btn" class="leaderboard-button">Leaderboard</button>
+            <button id="profile-btn" class="profile-button">Profile</button>
+        </div>
+
+        <div class="header">
+            <span>Score: <span id="score">0</span></span>
+            <span>Level: <span id="level">1</span></span>
+            <span>Progress: <span id="progress">1/3</span></span>
+        </div>
+
+        <div class="game-box">
+            <div class="timer" id="timer">60</div> 
+            <img id="country-flag" src="" alt="Country Flag" class="puzzle-image"> 
+            <p id="errorMessage" class="error-message"></p>
+
+            <div class="input-container">
+                <input type="text" id="userAnswer" placeholder="Guess the country: *">
+                <button id="hint-btn" class="hint-button">Hint</button> 
+            </div>
+
+            <div class="buttons">
+                <button id="submit-btn" class="submit-button">Submit</button>
+                <button id="close-btn" class="close-button">Close</button>
+                <button id="back-btn" class="back-button">Back</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hint Modal -->
+    <div id="hint-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Hint for Country</h3>
+            <p id="hint-text"></p>
+            <button id="close-hint-btn">Close Hint</button>
+        </div>
+    </div>
+
+    <!-- Banana Challenge Modal -->
+    <div id="banana-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Banana Challenge</h3>
+            <p>Complete this challenge to advance to the next level!</p>
+            <img id="banana-image" src="" alt="Banana Puzzle">
+            <div class="input-container">
+                <input type="text" id="banana-answer" placeholder="Enter your answer">
+                <button id="banana-submit" data-solution="">Submit</button>
+            </div>
+            <p id="banana-result" class="hidden"></p>
+        </div>
+    </div>
+
+    <script type="module" src="js/play.js"></script>
+</body>
+</html>
