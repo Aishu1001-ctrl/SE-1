@@ -22,7 +22,7 @@
             messagingSenderId: "838786217773",
             appId: "1:838786217773:web:30be0a8376d0e87d86c5a4",
             measurementId: "G-BMZD314T0M"
-            };
+        };
         
         // Initialize Firebase
         const app = initializeApp(firebaseConfig);
@@ -34,13 +34,53 @@
         window.auth = auth;
         window.db = db;
     </script>
+    <style>
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .logout-button {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+    background-color: #c0392b;
+}
+
+        
+   
+        
+        .top-buttons {
+            display: flex;
+            gap: 10px;
+        }
+    </style>
 </head>
 <body>
     <div class="game-container">
-        <div class="top-buttons">
-            <button id="exit-btn" class="exit-button">Exit</button>
-            <button id="leaderboard-btn" class="leaderboard-button">Leaderboard</button>
-            <button id="profile-btn" class="profile-button">Profile</button>
+        <div class="top-bar">
+            <div class="top-buttons">
+                <button id="exit-btn" class="exit-button">Exit</button>
+                <button id="leaderboard-btn" class="leaderboard-button">Leaderboard</button>
+                <button id="profile-btn" class="profile-button">Profile</button>
+            </div>
+            <button id="logout-btn" class="logout-button">Logout</button>
         </div>
 
         <div class="header">
@@ -50,15 +90,17 @@
         </div>
 
         <div class="game-box">
-            <div class="timer" id="timer">60</div> 
-            <img id="country-flag" src="" alt="Country Flag" class="puzzle-image"> 
+            <div class="timer" id="timer">60</div>
+            
+            <img id="country-flag" src="" alt="Country Flag" class="puzzle-image">
+            
             <p id="errorMessage" class="error-message"></p>
-
+            
             <div class="input-container">
                 <input type="text" id="userAnswer" placeholder="Guess the country: *">
-                <button id="hint-btn" class="hint-button">Hint</button> 
+                <button id="hint-btn" class="hint-button">Hint</button>
             </div>
-
+            
             <div class="buttons">
                 <button id="submit-btn" class="submit-button">Submit</button>
                 <button id="close-btn" class="close-button">Close</button>
@@ -93,5 +135,43 @@
     </div>
 
     <script type="module" src="js/play.js"></script>
+    <script type="module">
+        // Auth guard and logout functionality
+        import { getAuth, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+
+        // Check if user is logged in
+        function checkAuthStatus() {
+            const auth = getAuth();
+            const user = auth.currentUser;
+            
+            if (!user && !localStorage.getItem('userToken')) {
+                // No user is signed in, redirect to login
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Call this function when the page loads
+        checkAuthStatus();
+        
+        // Add logout functionality
+        document.getElementById('logout-btn').addEventListener('click', async () => {
+            try {
+                const auth = getAuth();
+                await signOut(auth);
+                
+                // Clear any local storage items related to session
+                localStorage.removeItem('userToken');
+                localStorage.removeItem('userEmail');
+                localStorage.removeItem('userId');
+                localStorage.removeItem('loginTime');
+                
+                // Redirect to login page
+                window.location.href = 'index.html';
+            } catch (error) {
+                console.error("Error signing out:", error);
+                alert("Failed to log out. Please try again.");
+            }
+        });
+    </script>
 </body>
 </html>
