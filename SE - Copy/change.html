@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile - Flag Guessing Game</title>
+    <link rel="stylesheet" href="css/change.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Edit Profile</h1>
+        <form id="editProfileForm">
+            <div class="form-group">
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required disabled>
+                
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn primary-btn">Save Changes</button>
+                <button type="button" class="btn secondary-btn" id="cancelBtn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+        import { 
+            getFirestore, 
+            doc, 
+            updateDoc
+        } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged
+        } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPDA9APsTXZOY1xpzlDZsS6u3hgFK-3OU",
+            authDomain: "se01-6c41d.firebaseapp.com",
+            projectId: "se01-6c41d",
+            storageBucket: "se01-6c41d.firebasestorage.app",
+            messagingSenderId: "838786217773",
+            appId: "1:838786217773:web:30be0a8376d0e87d86c5a4",
+            measurementId: "G-BMZD314T0M"
+        };
+          
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth();
+
+        // DOM elements
+        const editForm = document.getElementById('editProfileForm');
+        const nameInput = document.getElementById('name');
+        const emailInput = document.getElementById('email');
+        const cancelBtn = document.getElementById('cancelBtn');
+
+        // Load user data from localStorage
+        window.addEventListener('DOMContentLoaded', () => {
+            const userName = localStorage.getItem('currentUserName');
+            const userEmail = localStorage.getItem('currentUserEmail');
+            
+            if (userName && userEmail) {
+                nameInput.value = userName;
+                emailInput.value = userEmail;
+            } else {
+                alert('User data not found. Redirecting to profile page.');
+                window.location.href = 'profile.html';
+            }
+        });
+
+        // Handle form submission
+        editForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const user = auth.currentUser;
+            if (!user) {
+                alert('You must be logged in to update your profile.');
+                return;
+            }
+            
+            try {
+                // Update user document in Firestore
+                const userRef = doc(db, "users", user.uid);
+                await updateDoc(userRef, {
+                    name: nameInput.value
+                });
+                
+                // Update localStorage
+                localStorage.setItem('currentUserName', nameInput.value);
+                
+                alert('Profile updated successfully!');
+                window.location.href = 'profile.html';
+            } catch (error) {
+                console.error('Error updating profile:', error);
+                alert(`Failed to update profile: ${error.message}`);
+            }
+        });
+
+        // Handle cancel button
+        cancelBtn.addEventListener('click', () => {
+            window.location.href = 'profile.html';
+        });
+
+        // Check authentication state
+        onAuthStateChanged(auth, (user) => {
+            if (!user) {
+                alert("No user logged in!");
+                window.location.href = "signup.html";
+            }
+        });
+    </script>
+</body>
+</html>

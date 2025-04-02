@@ -4,22 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Leaderboard</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/leaderboard.css">
+    <!-- Firebase SDK scripts -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
 </head>
 <body>
     <div class="container">
-        <h1>Leaderboard</h1>
-        <table id="leaderboard">
-            <thead>
-                <tr>
-                    <th>Rank</th>
-                    <th>Name</th>
-                    <th>Score</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button onclick="goBack()">Back</button>
+        <h1>Leader Board</h1>
+        <div class="leaderboard">
+            <div class="row header">
+                <span>Rank</span>
+                <span>Name</span>
+                <span>Total Score</span>
+            </div>
+            <div id="leaderboard-list"></div>
+        </div>
     </div>
     <script src="js/leaderboard.js"></script>
 </body>
