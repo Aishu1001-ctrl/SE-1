@@ -25,8 +25,10 @@ body {
 /* Left Section (Game Background) */
 .left-section {
     flex: 1;
-    background: url('Frame 359.png') no-repeat center;
+    background: url('../image.png') no-repeat center center;
     background-size: cover; /* Ensures full coverage */
+    height: 100vh; /* Full viewport height */
+    width: 100%; /* Full width of the left section */
     display: flex;
     align-items: center;
     justify-content: center;
