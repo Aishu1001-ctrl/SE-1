@@ -35,7 +35,7 @@ const elements = {
     errorMsg: document.getElementById("errorMessage"),
     submitBtn: document.getElementById("submit-btn"),
     closeBtn: document.getElementById("close-btn"),
-    backBtn: document.getElementById("back-btn"),
+   
     exitBtn: document.getElementById("exit-btn"),
     leaderboardBtn: document.getElementById("leaderboard-btn"),
     profileBtn: document.getElementById("profile-btn"),
@@ -48,7 +48,9 @@ const elements = {
     hintModal: document.getElementById("hint-modal"),
     hintText: document.getElementById("hint-text"),
     closeHintBtn: document.getElementById("close-hint-btn"),
-    closeButtons: document.querySelectorAll(".close")
+    closeButtons: document.querySelectorAll(".close"),
+    previousLevel: document.getElementById("previous-level"),
+    nextLevel: document.getElementById("next-level")
 };
 
 // API Endpoints
@@ -56,6 +58,9 @@ const API_URL = "https://restcountries.com/v3.1/all";
 
 // Initialize the game
 function initGame() {
+    // Get user ID from local storage
+    gameState.userId = localStorage.getItem('userId');
+    
     updateUI();
     fetchAllCountries();
     startTimer();
@@ -136,13 +141,7 @@ function handleTimeUp() {
     elements.submitBtn.disabled = true;
     
     // Provide option to retry or go back after timeout
-    setTimeout(() => {
-        if (confirm("Time's up! Would you like to try again?")) {
-            resetLevel();
-        } else {
-            goBack();
-        }
-    }, 1500);
+   
 }
 
 // Reset the current level
@@ -166,21 +165,24 @@ function showHint() {
     
     // Generate hint based on the current country
     const country = gameState.currentCountry;
-    let hint = `The country's name starts with "${country[0].toUpperCase()}".`;
+    let hint = `<div class="hint-item"><span class="hint-label">First Letter:</span> <span class="hint-value">${country[0].toUpperCase()}</span></div>`;
     
     // Additional hints based on country properties
     const countryData = gameState.countries.find(c => c.name.common.toLowerCase() === country);
     if (countryData) {
         if (countryData.region) {
-            hint += ` It's located in ${countryData.region}.`;
+            hint += `<div class="hint-item"><span class="hint-label">Region:</span> <span class="hint-value">${countryData.region}</span></div>`;
         }
         if (countryData.capital && countryData.capital.length > 0) {
-            hint += ` The capital is ${countryData.capital[0]}.`;
+            hint += `<div class="hint-item"><span class="hint-label">Capital:</span> <span class="hint-value">${countryData.capital[0]}</span></div>`;
+        }
+        if (countryData.population) {
+            hint += `<div class="hint-item"><span class="hint-label">Population:</span> <span class="hint-value">${countryData.population.toLocaleString()}</span></div>`;
         }
     }
     
     // Display the hint
-    elements.hintText.textContent = hint;
+    elements.hintText.innerHTML = hint;
     elements.hintModal.style.display = "block";
 }
 
@@ -280,6 +282,10 @@ const fetchBananaQuestion = async () => {
 
 // Show banana challenge after completing a level
 async function showBananaChallenge() {
+    // Update level up animation
+    elements.previousLevel.textContent = gameState.currentLevel;
+    elements.nextLevel.textContent = gameState.currentLevel + 1;
+    
     // Reset any previous results
     elements.bananaResult.classList.add("hidden");
     elements.bananaAnswerInput.value = "";
@@ -397,24 +403,70 @@ async function saveScore(userId, level, levelScore) {
 
 // Go back to previous page
 function goBack() {
-    window.location.href = "../index.html";
+    window.location.href = "index.html";
 }
 
 // Navigate to leaderboard
 function goToLeaderboard() {
-    window.location.href = "../leaderboard.html";
+    window.location.href = "leaderboard.html";
 }
 
 // Navigate to profile
 function goToProfile() {
-    window.location.href = "../profile.html";
+    window.location.href = "profile.html";
 }
 
 // Setup event listeners
 function setupEventListeners() {
+    // Submit button
+    elements.submitBtn.addEventListener("click", checkAnswer);
+    
+    // Enter key in answer input
+    elements.answerInput.addEventListener("keyup", (event) => {
+        if (event.key === "Enter") {
+            checkAnswer();
+        }
+    });
+    
+    // Close button
+    elements.closeBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to close the game?")) {
+            goBack();
+        }
+    });
+    
+    
+    
+    // Exit button
+    elements.exitBtn.addEventListener("click", () => {
+        if (confirm("Are you sure you want to exit the game?")) {
+            goBack();
+        }
+    });
+    
+    // Leaderboard button
+    elements.leaderboardBtn.addEventListener("click", goToLeaderboard);
+    
+    // Profile button
+    elements.profileBtn.addEventListener("click", goToProfile);
+    
     // Hint button
     elements.hintBtn.addEventListener("click", showHint);
     elements.closeHintBtn.addEventListener("click", closeHint);
+    
+    // Close modals with X buttons
+    elements.closeButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            elements.hintModal.style.display = "none";
+            elements.bananaModal.style.display = "none";
+            
+            // If a hint was showing, resume the timer
+            if (gameState.hintShowing) {
+                gameState.hintShowing = false;
+                resumeTimer();
+            }
+        });
+    });
     
     // Answer input focus
     elements.answerInput.addEventListener("focus", () => {
@@ -431,6 +483,7 @@ function setupEventListeners() {
 
         if (userAnswer === correctAnswer) {
             elements.bananaResult.textContent = "🎉 Correct! Moving to next level!";
+            elements.bananaResult.style.color = "green";
             elements.bananaResult.classList.remove("hidden");
             
             setTimeout(() => {
@@ -441,6 +494,7 @@ function setupEventListeners() {
             }, 1500);
         } else {
             elements.bananaResult.textContent = "❌ Incorrect. Try again!";
+            elements.bananaResult.style.color = "red";
             elements.bananaResult.classList.remove("hidden");
             
             setTimeout(() => {
@@ -448,100 +502,22 @@ function setupEventListeners() {
             }, 1500);
         }
     });
-
-    // Close modal buttons
-    elements.closeButtons.forEach(closeBtn => {
-        closeBtn.addEventListener("click", () => {
-            closeBtn.closest(".modal").style.display = "none";
-            if (closeBtn.closest(".modal") === elements.hintModal) {
-                gameState.hintShowing = false;
-                resumeTimer();
-            } else if (closeBtn.closest(".modal") === elements.bananaModal) {
-                handleBananaCompletion();
-            }
-        });
-    });
-
-    // Close modal when clicking outside
-    window.onclick = function(event) {
-        if (event.target.classList.contains('modal')) {
-            event.target.style.display = "none";
-            if (event.target === elements.hintModal) {
-                gameState.hintShowing = false;
-                resumeTimer();
-            } else if (event.target === elements.bananaModal) {
-                handleBananaCompletion();
-            }
-        }
-    };
-
-    // Submit answer button
-    elements.submitBtn.addEventListener("click", checkAnswer);
     
-    // Enter key in answer input
-    elements.answerInput.addEventListener("keyup", (event) => {
-        if (event.key === "Enter") checkAnswer();
-    });
-    
-    // Enter key in banana answer input
+    // Handle banana input enter key
     elements.bananaAnswerInput.addEventListener("keyup", (event) => {
         if (event.key === "Enter") {
             elements.bananaSubmit.click();
         }
     });
     
-    // Navigation buttons
-    elements.backBtn.addEventListener("click", () => {
-        if (confirm("Are you sure you want to exit? Your progress will be lost.")) {
-            // Save progress before exiting
-            if (gameState.userId) {
-                saveScore(gameState.userId, gameState.currentLevel, gameState.levelScore);
-            }
-            goBack();
+    // Handle window closing
+    window.addEventListener("beforeunload", (event) => {
+        // Save the current score before closing
+        if (gameState.userId) {
+            saveScore(gameState.userId, gameState.currentLevel, gameState.levelScore);
         }
     });
-    
-    elements.closeBtn.addEventListener("click", () => {
-        if (confirm("Are you sure you want to exit? Your progress will be lost.")) {
-            // Save progress before exiting
-            if (gameState.userId) {
-                saveScore(gameState.userId, gameState.currentLevel, gameState.levelScore);
-            }
-            goBack();
-        }
-    });
-    
-    elements.exitBtn.addEventListener("click", () => {
-        if (confirm("Are you sure you want to exit? Your progress will be lost.")) {
-            // Save progress before exiting
-            if (gameState.userId) {
-                saveScore(gameState.userId, gameState.currentLevel, gameState.levelScore);
-            }
-            goBack();
-        }
-    });
-    
-    elements.leaderboardBtn.addEventListener("click", goToLeaderboard);
-    elements.profileBtn.addEventListener("click", goToProfile);
-    
-    // Check if user is logged in using Firebase Auth v9
-    const checkUserAuth = async () => {
-        if (typeof window.auth !== 'undefined') {
-            window.auth.onAuthStateChanged(user => {
-                if (user) {
-                    gameState.userId = user.uid;
-                    console.log("User logged in:", user.uid);
-                } else {
-                    console.log("No user logged in");
-                }
-            });
-        } else {
-            console.warn("Firebase Auth not initialized");
-        }
-    };
-    
-    checkUserAuth();
 }
 
-// Start the game when the DOM is fully loaded
+// Initialize the game when the page loads
 document.addEventListener("DOMContentLoaded", initGame);

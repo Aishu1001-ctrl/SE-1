@@ -1,27 +1,284 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>User Profile - Flag Guessing Game</title>
+    <link rel="stylesheet" href="css/profile.css">
+    
+    <!-- Firebase SDK imports using modular v9 -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+        import { getAuth } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
+        import { getFirestore } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
+        
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDPDA9APsTXZOY1xpzlDZsS6u3hgFK-3OU",
+            authDomain: "se01-6c41d.firebaseapp.com",
+            projectId: "se01-6c41d",
+            storageBucket: "se01-6c41d.firebasestorage.app",
+            messagingSenderId: "838786217773",
+            appId: "1:838786217773:web:30be0a8376d0e87d86c5a4",
+            measurementId: "G-BMZD314T0M"
+        };
+        
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        
+        // Make Firebase services available globally
+        window.app = app;
+        window.auth = auth;
+        window.db = db;
+    </script>
+    <style>
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .logout-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b;
+        }
+        
+        .top-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .profile-container {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+        
+        .profile-container h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: white;
+        }
+        
+        .profile-info {
+            margin-bottom: 20px;
+        }
+        
+        .profile-info .info-row {
+            display: flex;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+        }
+        
+        .profile-info .label {
+            font-weight: bold;
+            width: 150px;
+            color: #3498db;
+        }
+        
+        .profile-info .value {
+            flex-grow: 1;
+            color: white;
+        }
+        
+        .level-scores {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .level-scores h3 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            color: #3498db;
+        }
+        
+        .level-score {
+            padding: 8px;
+            margin-bottom: 5px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            color: white;
+        }
+        
+        .profile-actions {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        
+        .edit-button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .edit-button:hover {
+            background-color: #2980b9;
+        }
+        
+        .delete-button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .delete-button:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Modal styling */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+        
+        .modal-content {
+            background-color: #2c3e50;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+        }
+        
+        .modal h3 {
+            margin-top: 0;
+            color: white;
+        }
+        
+        .modal input {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+            border: 1px solid #7f8c8d;
+        }
+        
+        .modal-error {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+    </style>
 </head>
 <body>
-    <div class="profile-container">
-        <h1>Profile</h1>
-        <div class="profile-info">
-            <p><strong>Name</strong> : <span id="name">Akshi</span></p>
-            <p><strong>Email</strong> : <span id="email">b@gmail.com</span></p>
-            <p><strong>Rank</strong> : <span id="rank">2</span></p>
-            <p><strong>Highscore</strong> : <span id="highscore">20</span></p>
+    <div class="game-container">
+        <div class="top-bar">
+            <div class="top-buttons">
+                <button id="back-btn" class="exit-button">Back to Game</button>
+                <button id="leaderboard-btn" class="leaderboard-button">Leaderboard</button>
+            </div>
+            <button id="logout-btn" class="logout-button" onclick="logout()">Logout</button>
+        </div>
 
-            <button onclick="saveProfile()">Edit</button>
-            <button onclick="goBack()">Delete</button>
-
+        <div class="profile-container">
+            <h2>User Profile</h2>
+            
+            <div class="profile-info">
+                <div class="info-row">
+                    <div class="label">Name:</div>
+                    <div class="value" id="userName">Loading...</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">Email:</div>
+                    <div class="value" id="userEmail">Loading...</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">Rank:</div>
+                    <div class="value" id="userRank">Loading...</div>
+                </div>
+                <div class="info-row">
+                    <div class="label">High Score:</div>
+                    <div class="value" id="userHighscore">Loading...</div>
+                </div>
+            </div>
+            
+            <div class="level-scores">
+                <h3>Level Scores</h3>
+                <div id="levelScores">
+                    <div class="level-score">Loading scores...</div>
+                </div>
+            </div>
+            
+            <div class="profile-actions">
+                <button id="edit-btn" class="edit-button" onclick="editProfile()">Edit Profile</button>
+                <button id="delete-btn" class="delete-button" onclick="deleteProfile()">Delete Profile</button>
+            </div>
         </div>
     </div>
-    <script src="js/profile.js"></script>
+    
+    <!-- Reauthentication Modal for Profile Deletion -->
+    <div id="reauthModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirm Profile Deletion</h3>
+            <p>For security, please enter your password to delete your profile:</p>
+            
+            <form id="reauthForm">
+                <input type="password" id="reauthPassword" placeholder="Enter your password" required>
+                <div id="reauthError" class="modal-error"></div>
+                
+                <div class="profile-actions">
+                    <button type="button" onclick="closeModal()" class="edit-button">Cancel</button>
+                    <button type="submit" class="delete-button">Confirm Delete</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="js/profile.js"></script>
+    <script type="module">
+        // Handle back button
+        document.getElementById('back-btn').addEventListener('click', () => {
+            window.location.href = 'play.html';
+        });
+        
+        // Handle leaderboard button
+        document.getElementById('leaderboard-btn').addEventListener('click', () => {
+            window.location.href = 'leaderboard.html';
+        });
+    </script>
 </body>
 </html>

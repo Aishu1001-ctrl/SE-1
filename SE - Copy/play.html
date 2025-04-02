@@ -46,25 +46,22 @@
         }
         
         .logout-button {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
 
-.logout-button:hover {
-    background-color: #c0392b;
-}
-
-        
-   
+        .logout-button:hover {
+            background-color: #c0392b;
+        }
         
         .top-buttons {
             display: flex;
@@ -104,33 +101,39 @@
             <div class="buttons">
                 <button id="submit-btn" class="submit-button">Submit</button>
                 <button id="close-btn" class="close-button">Close</button>
-                <button id="back-btn" class="back-button">Back</button>
+               
             </div>
         </div>
     </div>
 
     <!-- Hint Modal -->
     <div id="hint-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content hint-modal-content">
             <span class="close">&times;</span>
             <h3>Hint for Country</h3>
-            <p id="hint-text"></p>
-            <button id="close-hint-btn">Close Hint</button>
+            <div id="hint-text" class="hint-text-container"></div>
+            <button id="close-hint-btn" class="modal-button">Close Hint</button>
         </div>
     </div>
 
     <!-- Banana Challenge Modal -->
     <div id="banana-modal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content banana-modal-content">
             <span class="close">&times;</span>
+            <div class="level-up-indicator">
+                <h2>Level Up!</h2>
+                <div class="level-animation">
+                    <span id="previous-level">1</span> → <span id="next-level">2</span>
+                </div>
+            </div>
             <h3>Banana Challenge</h3>
             <p>Complete this challenge to advance to the next level!</p>
-            <img id="banana-image" src="" alt="Banana Puzzle">
-            <div class="input-container">
+            <img id="banana-image" src="" alt="Banana Puzzle" class="banana-image">
+            <div class="input-container banana-input-container">
                 <input type="text" id="banana-answer" placeholder="Enter your answer">
-                <button id="banana-submit" data-solution="">Submit</button>
+                <button id="banana-submit" data-solution="" class="banana-submit-btn">Submit</button>
             </div>
-            <p id="banana-result" class="hidden"></p>
+            <p id="banana-result" class="hidden banana-result"></p>
         </div>
     </div>
 
