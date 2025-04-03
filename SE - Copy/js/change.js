@@ -99,7 +99,7 @@ const saveProfileChanges = async (event) => {
         localStorage.setItem('currentUserName', newName);
         localStorage.setItem('currentUserEmail', newEmail);
         
-        // Show success message
+       
         showUpdateMessage();
         
         // Redirect after 2 seconds
@@ -112,7 +112,7 @@ const saveProfileChanges = async (event) => {
     }
 };
 
-// Show success message
+
 const showUpdateMessage = () => {
     updateMessage.style.display = "block";
     errorMessage.style.display = "none";
@@ -125,30 +125,30 @@ const showError = (message) => {
     updateMessage.style.display = "none";
 };
 
-// Navigate back to profile page
+
 const navigateToProfile = () => {
     window.location.href = "profile.html";
 };
 
-// Event listeners
+
 document.addEventListener('DOMContentLoaded', () => {
     // Load user data when page loads
     loadUserData();
     
-    // Form submission
+    
     editProfileForm.addEventListener('submit', saveProfileChanges);
     
-    // Cancel button
+    
     cancelBtn.addEventListener('click', navigateToProfile);
     
-    // Back button
+  
     backBtn.addEventListener('click', navigateToProfile);
 });
 
 // Check authentication state
 onAuthStateChanged(auth, (user) => {
     if (!user) {
-        // No user logged in, redirect to login page
+        
         window.location.href = "signup.html";
     }
 });

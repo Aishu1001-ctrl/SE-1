@@ -1,5 +1,5 @@
-// auth-guard.js
-// This file should be imported on all protected pages
+
+// imported on all protected pages
 
 function validateSession() {
     const token = localStorage.getItem('userToken');

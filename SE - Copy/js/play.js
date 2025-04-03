@@ -11,7 +11,7 @@ const config = {
 let gameState = {
     currentLevel: 1,
     score: 0,
-    levelScore: 0, // New property to track score per level
+    levelScore: 0, 
     timeLeft: config.initialTime,
     currentCountry: "",
     timer: null,
@@ -437,24 +437,24 @@ function setupEventListeners() {
     
     
     
-    // Exit button
+  
     elements.exitBtn.addEventListener("click", () => {
         if (confirm("Are you sure you want to exit the game?")) {
             goBack();
         }
     });
     
-    // Leaderboard button
+   
     elements.leaderboardBtn.addEventListener("click", goToLeaderboard);
     
-    // Profile button
+    
     elements.profileBtn.addEventListener("click", goToProfile);
     
-    // Hint button
+
     elements.hintBtn.addEventListener("click", showHint);
     elements.closeHintBtn.addEventListener("click", closeHint);
     
-    // Close modals with X buttons
+  
     elements.closeButtons.forEach(button => {
         button.addEventListener("click", () => {
             elements.hintModal.style.display = "none";

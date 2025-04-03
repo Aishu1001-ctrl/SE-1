@@ -16,31 +16,31 @@ function startTimer() {
 
 window.onload = startTimer;
 
-// Go Back Function
+
 function goBack() {
     window.history.back();
 }
 
-// Close Game Function
+
 function closeGame() {
     window.location.href = "play.html"; 
 }
 
-// Check Answer Function
+
 function checkAnswer() {
     const userAnswer = document.getElementById("userAnswer").value.trim();
-    const correctAnswer = "10"; // Change this based on your puzzle solution
+    const correctAnswer = "10"; 
 
     if (userAnswer === correctAnswer) {
         alert("Correct answer! 🎉");
-        window.location.href = "next-level.html"; // Redirect to next level
+        window.location.href = "next-level.html";
     } else {
         document.getElementById("errorMessage").innerHTML = 
             '<span style="color:red;">❌ Incorrect answer, <a href="#" onclick="retry()">Try again</a></span>';
     }
 }
 
-// Retry Function
+
 function retry() {
     document.getElementById("errorMessage").innerHTML = "";
     document.getElementById("userAnswer").value = "";

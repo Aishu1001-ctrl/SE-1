@@ -69,7 +69,7 @@ function checkUserSession() {
     const loginTime = localStorage.getItem('loginTime');
     
     if (token && loginTime) {
-        // Define session expiry time (e.g., 1 hour)
+        // Define session expiry time
         const expiryTime = 60 * 60 * 1000; // 1 hour in milliseconds
         const currentTime = Date.now();
         

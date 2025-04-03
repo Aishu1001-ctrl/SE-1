@@ -1,9 +1,9 @@
-// Import Firebase modules from the CDN (only once)
+// Import Firebase modules from the CDN 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
 import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-// Your web app's Firebase configuration
+// web app's Firebase configuration
 const firebaseConfig = {
   apiKey: "AIzaSyDPDA9APsTXZOY1xpzlDZsS6u3hgFK-3OU",
   authDomain: "se01-6c41d.firebaseapp.com",
